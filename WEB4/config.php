@@ -56,8 +56,39 @@ define('MISTRAL_API_KEYS', [
     'cvEzQMKN74Ez8RIwJ6y8J30ENDjFruXkFf'
 ]);
 
+// Clé API principale (pour compatibilité)
+define('MISTRAL_API_KEY', MISTRAL_API_KEYS[0]);
+
 // End point API Mistral
+define('MISTRAL_API_ENDPOINT', 'https://api.mistral.ai/v1/chat/completions');
 define('MISTRAL_ENDPOINT', 'https://api.mistral.ai/v1/chat/completions');
+
+// Modèle par défaut pour le lead agent
+define('LEAD_AGENT_DEFAULT_MODEL', 'mistral-large-2512');
+
+// Modèle pour les rapports et synthèses
+define('MISTRAL_MODEL_REPORT', 'mistral-medium-2505');
+
+// Modèle pour la planification de tâches
+define('MISTRAL_MODEL_PLANNER', 'mistral-large-2512');
+
+// Modèle pour la recherche
+define('MISTRAL_MODEL_RESEARCH', 'mistral-medium-2505');
+
+// Modèle pour la génération de code
+define('MISTRAL_MODEL_CODEGEN', 'codestral-2508');
+
+// Modèle pour l'analyse de données
+define('MISTRAL_MODEL_ANALYSIS', 'magistral-medium-2509');
+
+// Modèle par défaut
+define('MISTRAL_MODEL_DEFAULT', 'mistral-small-2506');
+
+// Timeouts cURL (300 secondes minimum)
+define('MISTRAL_TIMEOUT', 300);
+define('MISTRAL_CONNECT_TIMEOUT', 300);
+define('CURL_TIMEOUT', 300);
+define('CURL_CONNECT_TIMEOUT', 300);
 
 // Modèles disponibles classés par spécialité
 define('MISTRAL_MODELS', [
@@ -200,9 +231,6 @@ define('MISTRAL_MODELS', [
     ]
 ]);
 
-// Modèle par défaut pour le lead agent
-define('LEAD_AGENT_DEFAULT_MODEL', 'mistral-large-2512');
-
 // ============================================================================
 // ⏳ GESTION DU TEMPS ET DU DÉBIT (CRITIQUE)
 // ============================================================================
@@ -243,7 +271,7 @@ define('MEMORY_TYPE_LONG_TERM', 'long_term');
 define('MEMORY_TYPE_EXTRACTED', 'extracted');
 
 // ============================================================================
-// 🤖 CONFIGURATION DES AGENTS
+// 🧠 CONFIGURATION AGENTS
 // ============================================================================
 
 // Nombre maximum de sous-agents parallèles
@@ -251,6 +279,9 @@ define('SUBAGENT_MAX_PARALLEL', 3);
 
 // Interval de heartbeat (en secondes)
 define('AGENT_HEARTBEAT_INTERVAL', 5);
+
+// Modèle par défaut pour le lead agent (déjà défini plus haut, gardé pour compatibilité)
+// define('LEAD_AGENT_DEFAULT_MODEL', 'mistral-large-2512');
 
 // ============================================================================
 // 🔧 CONFIGURATION SANDBOX
