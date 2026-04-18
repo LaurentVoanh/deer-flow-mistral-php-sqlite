@@ -1,1 +1,33 @@
-Nothing should be ignored based on the provided file changes. The only modified file is 'WEB4/db.php', which appears to be a source code file and should not be ignored.
+```
+# Database files
+*.db
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+
+# Editors
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+.env
+.env.local
+*.env.*
+```

@@ -25,7 +25,7 @@ class LeadAgent {
     private SubAgent $subAgent;
     private MemoryManager $memory;
     private Sandbox $sandbox;
-    private StreamHelper $stream;
+    private SSEHelper $stream;
     
     public function __construct() {
         $this->db = getDbConnection();
@@ -33,7 +33,7 @@ class LeadAgent {
         $this->subAgent = getSubAgent();
         $this->memory = new MemoryManager();
         $this->sandbox = new Sandbox();
-        $this->stream = new StreamHelper();
+        $this->stream = null; // Sera initialisé avec un threadId quand nécessaire
     }
     
     /**
@@ -50,6 +50,9 @@ class LeadAgent {
         $threadId = $options['thread_id'] ?? $taskId;
         $title = $options['title'] ?? substr($taskDescription, 0, 50);
         $usePlanning = $options['use_planning'] ?? true;
+        
+        // Initialiser le stream helper avec le threadId
+        $this->stream = new SSEHelper($threadId, $taskId);
         
         try {
             // Créer le thread dans la base de données
