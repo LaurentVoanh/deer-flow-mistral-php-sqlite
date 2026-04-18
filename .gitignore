@@ -1,5 +1,8 @@
 ```
-# Environment variables
+# Database files
+*.db
+
+# Environment files
 .env
 .env.local
 *.env.*
@@ -11,18 +14,9 @@
 *.tmp
 *.swp
 
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Dependencies
-node_modules/
-vendor/
-
-# Build artifacts
-dist/
-build/
-target/
+# Editor/IDE files
+.vscode/
+.idea/
 
 # Python
 __pycache__/
@@ -30,65 +24,7 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
-env/
 venv/
 .venv/
-.venv.bak/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git/
-.mypy_cache/
-.pytest_cache/
-.hypothesis/
-
-# PHP specific
-*.php~
-*.php.bak
-*.php.swp
-.php_cs.cache
-composer.lock
-vendor/
-
-# Web
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Compression
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+.env/
 ```

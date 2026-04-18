@@ -335,7 +335,8 @@ PROMPT;
      * Obtient les informations d'une tâche
      */
     private function getTaskInfo(string $taskId): array {
-        $stmt = $this->db->prepare("SELECT * FROM threads WHERE id = :id");
+        $prefix = DB_PREFIX;
+        $stmt = $this->db->prepare("SELECT * FROM {$prefix}threads WHERE id = :id");
         $stmt->execute([':id' => $taskId]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         

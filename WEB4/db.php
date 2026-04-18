@@ -115,6 +115,8 @@ class Database {
             "CREATE INDEX IF NOT EXISTS idx_sandbox_thread ON " . DB_PREFIX . "sandbox_files(thread_id)",
             "CREATE INDEX IF NOT EXISTS idx_plans_thread ON " . DB_PREFIX . "plans(thread_id)",
             "CREATE INDEX IF NOT EXISTS idx_agent_logs_thread ON " . DB_PREFIX . "agent_logs(thread_id)",
+            "CREATE INDEX IF NOT EXISTS idx_stream_events_task ON " . DB_PREFIX . "stream_events(task_id)",
+            "CREATE INDEX IF NOT EXISTS idx_plan_steps_task ON " . DB_PREFIX . "plan_steps(task_id)",
         ];
 
         foreach ($indexes as $indexSql) {
@@ -307,6 +309,38 @@ class Database {
                     status TEXT DEFAULT 'success',
                     error_message TEXT,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            ",
+
+            'stream_events' => "
+                CREATE TABLE IF NOT EXISTS {$prefix}stream_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    task_id TEXT NOT NULL,
+                    thread_id TEXT,
+                    event_type TEXT NOT NULL,
+                    event_data TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            ",
+
+            'plan_steps' => "
+                CREATE TABLE IF NOT EXISTS {$prefix}plan_steps (
+                    id TEXT PRIMARY KEY,
+                    task_id TEXT NOT NULL,
+                    step_id TEXT NOT NULL,
+                    title TEXT NOT NULL,
+                    description TEXT,
+                    skill_required TEXT,
+                    model_recommended TEXT,
+                    status TEXT DEFAULT 'pending',
+                    priority INTEGER DEFAULT 0,
+                    dependencies TEXT,
+                    result TEXT,
+                    error_message TEXT,
+                    started_at DATETIME,
+                    completed_at DATETIME,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (task_id) REFERENCES {$prefix}plans(id)
                 )
             "
         ];
