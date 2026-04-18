@@ -28,13 +28,13 @@ class APIGateway {
     
     private PDO $db;
     private LeadAgent $agent;
-    private StreamHelper $stream;
+    private SSEHelper $stream;
     private array $allowedOrigins = ['*'];
     
     public function __construct() {
         $this->db = getDbConnection();
         $this->agent = getLeadAgent();
-        $this->stream = new StreamHelper();
+        $this->stream = new SSEHelper('system');
     }
     
     /**
@@ -489,10 +489,10 @@ class APIGateway {
                 'mbstring' => extension_loaded('mbstring')
             ],
             'database' => [
-                'writable' => is_writable(__DIR__ . '/data')
+                'writable' => is_writable(__DIR__)
             ],
             'mistral_api' => [
-                'configured' => defined('MISTRAL_API_KEY') && !empty(MISTRAL_API_KEY)
+                'configured' => count(MISTRAL_API_KEYS) > 0 && !empty(MISTRAL_API_KEYS[0])
             ]
         ];
         
