@@ -379,15 +379,15 @@ PROMPT;
      * Récupère le contexte mémoire d'une tâche
      */
     private function getTaskMemoryContext(string $taskId): array {
+        $prefix = DB_PREFIX;
         $stmt = $this->db->prepare("
-            SELECT content FROM memories 
-            WHERE task_id = :task_id OR thread_id = :thread_id
+            SELECT content FROM {$prefix}memory_short 
+            WHERE thread_id = :thread_id
             ORDER BY created_at DESC
             LIMIT 10
         ");
         
         $stmt->execute([
-            ':task_id' => $taskId,
             ':thread_id' => $taskId
         ]);
         
@@ -401,7 +401,8 @@ PROMPT;
      * Récupère un plan existant
      */
     public function getPlan(string $taskId): ?array {
-        $stmt = $this->db->prepare("SELECT plan_data FROM plans WHERE task_id = :task_id");
+        $prefix = DB_PREFIX;
+        $stmt = $this->db->prepare("SELECT plan_data FROM {$prefix}plans WHERE task_id = :task_id");
         $stmt->execute([':task_id' => $taskId]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -421,8 +422,9 @@ PROMPT;
         string $status,
         ?string $result = null
     ): void {
+        $prefix = DB_PREFIX;
         $stmt = $this->db->prepare("
-            UPDATE plan_steps 
+            UPDATE {$prefix}plan_steps 
             SET status = :status, 
                 result = :result,
                 completed_at = CASE WHEN :status = 'completed' THEN datetime('now') ELSE NULL END,
@@ -442,8 +444,9 @@ PROMPT;
      * Vérifie si toutes les étapes sont complétées
      */
     public function isPlanComplete(string $taskId): bool {
+        $prefix = DB_PREFIX;
         $stmt = $this->db->prepare("
-            SELECT COUNT(*) FROM plan_steps 
+            SELECT COUNT(*) FROM {$prefix}plan_steps 
             WHERE task_id = :task_id AND status != 'completed'
         ");
         $stmt->execute([':task_id' => $taskId]);
@@ -454,12 +457,13 @@ PROMPT;
      * Obtient les étapes prêtes à être exécutées
      */
     public function getReadySteps(string $taskId): array {
+        $prefix = DB_PREFIX;
         $plan = $this->getPlan($taskId);
         if (!$plan) {
             return [];
         }
         
-        $stmt = $this->db->prepare("SELECT * FROM plan_steps WHERE task_id = :task_id AND status = 'pending'");
+        $stmt = $this->db->prepare("SELECT * FROM {$prefix}plan_steps WHERE task_id = :task_id AND status = 'pending'");
         $stmt->execute([':task_id' => $taskId]);
         $pendingSteps = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
@@ -470,7 +474,7 @@ PROMPT;
             // Vérifier si toutes les dépendances sont complétées
             $depsCompleted = true;
             foreach ($dependencies as $depId) {
-                $depStmt = $this->db->prepare("SELECT status FROM plan_steps WHERE task_id = :task_id AND step_id = :step_id");
+                $depStmt = $this->db->prepare("SELECT status FROM {$prefix}plan_steps WHERE task_id = :task_id AND step_id = :step_id");
                 $depStmt->execute([':task_id' => $taskId, ':step_id' => $depId]);
                 $depStatus = $depStmt->fetchColumn();
                 

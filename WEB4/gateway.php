@@ -201,9 +201,10 @@ class APIGateway {
         
         if ($taskId) {
             // Récupérer l'historique des événements pour cette tâche
+            $prefix = DB_PREFIX;
             $stmt = $this->db->prepare("
                 SELECT event_type, event_data, created_at 
-                FROM stream_events 
+                FROM {$prefix}stream_events 
                 WHERE task_id = :task_id 
                 ORDER BY created_at DESC 
                 LIMIT 50
@@ -238,7 +239,8 @@ class APIGateway {
             $offset = (int)($_GET['offset'] ?? 0);
             $status = $_GET['status'] ?? null;
             
-            $query = "SELECT * FROM threads";
+            $prefix = DB_PREFIX;
+            $query = "SELECT * FROM {$prefix}threads";
             $params = [];
             
             if ($status) {
@@ -256,7 +258,7 @@ class APIGateway {
             $threads = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             // Compter le total
-            $countQuery = "SELECT COUNT(*) FROM threads";
+            $countQuery = "SELECT COUNT(*) FROM {$prefix}threads";
             if ($status) {
                 $countQuery .= " WHERE status = :status";
             }
@@ -449,21 +451,24 @@ class APIGateway {
      * Gère la route /api/stats
      */
     private function handleStatsRoute(): void {
+        $prefix = DB_PREFIX;
+        
         // Statistiques générales
         $stats = [
             'threads' => [
-                'total' => (int)$this->db->query("SELECT COUNT(*) FROM threads")->fetchColumn(),
-                'running' => (int)$this->db->query("SELECT COUNT(*) FROM threads WHERE status = 'running'")->fetchColumn(),
-                'completed' => (int)$this->db->query("SELECT COUNT(*) FROM threads WHERE status = 'completed'")->fetchColumn(),
-                'failed' => (int)$this->db->query("SELECT COUNT(*) FROM threads WHERE status = 'failed'")->fetchColumn()
+                'total' => (int)$this->db->query("SELECT COUNT(*) FROM {$prefix}threads")->fetchColumn(),
+                'running' => (int)$this->db->query("SELECT COUNT(*) FROM {$prefix}threads WHERE status = 'running'")->fetchColumn(),
+                'completed' => (int)$this->db->query("SELECT COUNT(*) FROM {$prefix}threads WHERE status = 'completed'")->fetchColumn(),
+                'failed' => (int)$this->db->query("SELECT COUNT(*) FROM {$prefix}threads WHERE status = 'failed'")->fetchColumn()
             ],
             'memories' => [
-                'total' => (int)$this->db->query("SELECT COUNT(*) FROM memories")->fetchColumn()
+                'total' => (int)$this->db->query("SELECT COUNT(*) FROM {$prefix}memory_short")->fetchColumn() + 
+                          (int)$this->db->query("SELECT COUNT(*) FROM {$prefix}memory_long")->fetchColumn()
             ],
             'plans' => [
-                'total' => (int)$this->db->query("SELECT COUNT(*) FROM plans")->fetchColumn(),
-                'steps_total' => (int)$this->db->query("SELECT COUNT(*) FROM plan_steps")->fetchColumn(),
-                'steps_completed' => (int)$this->db->query("SELECT COUNT(*) FROM plan_steps WHERE status = 'completed'")->fetchColumn()
+                'total' => (int)$this->db->query("SELECT COUNT(*) FROM {$prefix}plans")->fetchColumn(),
+                'steps_total' => (int)$this->db->query("SELECT COUNT(*) FROM {$prefix}plan_steps")->fetchColumn(),
+                'steps_completed' => (int)$this->db->query("SELECT COUNT(*) FROM {$prefix}plan_steps WHERE status = 'completed'")->fetchColumn()
             ],
             'storage' => [
                 'sandbox_size' => $this->getDirectorySize(__DIR__ . '/sandbox')

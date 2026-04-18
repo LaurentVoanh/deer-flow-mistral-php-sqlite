@@ -443,8 +443,10 @@ PROMPT;
      * Obtient l'état complet d'une tâche
      */
     public function getTaskState(string $taskId): array {
+        $prefix = DB_PREFIX;
+        
         // Récupérer le thread
-        $stmt = $this->db->prepare("SELECT * FROM threads WHERE id = :id");
+        $stmt = $this->db->prepare("SELECT * FROM {$prefix}threads WHERE id = :id");
         $stmt->execute([':id' => $taskId]);
         $thread = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -457,7 +459,7 @@ PROMPT;
         
         // Récupérer les étapes
         $stmt = $this->db->prepare("
-            SELECT * FROM plan_steps WHERE task_id = :task_id ORDER BY priority
+            SELECT * FROM {$prefix}plan_steps WHERE task_id = :task_id ORDER BY priority
         ");
         $stmt->execute([':task_id' => $taskId]);
         $steps = $stmt->fetchAll(PDO::FETCH_ASSOC);
