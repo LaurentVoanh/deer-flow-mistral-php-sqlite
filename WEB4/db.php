@@ -459,6 +459,14 @@ function logApiUsage(
 }
 
 /**
+ * Obtient une instance de connexion PDO
+ * @return PDO Instance de connexion
+ */
+function getDbConnection(): PDO {
+    return Database::getInstance();
+}
+
+/**
  * Récupère les statistiques d'usage de l'API
  * @param int $days Nombre de jours à analyser
  * @return array Statistiques
